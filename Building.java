@@ -10,9 +10,8 @@ import java.util.ArrayList;
  * Print buildings within a range
  */
 public class Building {
-    public int buildingID;
     public MinHeap minHeap;
-    public RB_tree red_black_tree;
+    public Red_Black_Tree red_black_tree;
     ArrayList<String> outputToFile;
 
     /**
@@ -21,7 +20,7 @@ public class Building {
      */
     public Building() {
         this.minHeap = new MinHeap();
-        this.red_black_tree = new RB_tree();
+        this.red_black_tree = new Red_Black_Tree();
         this.outputToFile = new ArrayList<String>();
     }
 
@@ -56,7 +55,7 @@ public class Building {
     public void Insert(int buildingID, long total_time_to_build, long totalExecutionTime) {
         if (red_black_tree.checkIfBuildingPresent(buildingID, red_black_tree.root) == 0) {
             red_black_tree.insert(buildingID, total_time_to_build, totalExecutionTime);
-            RB_Node newNode = red_black_tree.Search(buildingID, red_black_tree.root);
+            Red_Black_Node newNode = red_black_tree.Search(buildingID, red_black_tree.root);
             minHeap.insert(total_time_to_build, totalExecutionTime, newNode);
         } else {
             outputToFile.add("Duplicate building number being insert, Aborted construction");
@@ -72,10 +71,10 @@ public class Building {
      * @param buildingID the identifier of the building to be printed
      */
     public void printBuilding(int buildingID) {
-        RB_Node printNode = red_black_tree.Search(buildingID, red_black_tree.root);
+        Red_Black_Node printNode = red_black_tree.Search(buildingID, red_black_tree.root);
         if (!printNode.isEmpty()) {
             outputToFile.add("(" + red_black_tree.getBuildingDetails(buildingID) + "," +
-					printNode.execution_time + ","
+                    printNode.construction_time + ","
                     + printNode.total_time + ")");
         } else {
             outputToFile.add("(0,0,0)");
@@ -105,8 +104,8 @@ public class Building {
             int build = 0;
             while (build < res.size()) {
                 if (res.get(build) != 0) {
-                    RB_Node newNode = red_black_tree.Search(res.get(build), red_black_tree.root);
-                    s += "(" + res.get(build) + "," + newNode.execution_time + "," + newNode.total_time + ")";
+                    Red_Black_Node newNode = red_black_tree.Search(res.get(build), red_black_tree.root);
+                    s += "(" + res.get(build) + "," + newNode.construction_time + "," + newNode.total_time + ")";
                     if (build != res.size() - 1) {
                         s += ",";
                     }

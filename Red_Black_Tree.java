@@ -1,12 +1,5 @@
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Scanner;
 
 /**
  * This class has the core logic of red black tree
@@ -16,10 +9,10 @@ import java.util.Scanner;
  * getMin() - O(1)
  * insertSearch - log(n)
  */
-class Empty extends RB_Node {
-    public Empty() {
+class EmptyRedBlackTree extends Red_Black_Node {
+    public EmptyRedBlackTree() {
         super();
-        this.color = Color.black;
+        this.nodeColor = Node_Color.black;
     }
 
     public boolean isEmpty() {
@@ -27,18 +20,18 @@ class Empty extends RB_Node {
     }
 }
 
-public class RB_tree {
-    RB_Node root = new Empty();
+public class Red_Black_Tree {
+    Red_Black_Node root = new EmptyRedBlackTree();
 
     /**
      * Finds all the jobs between the range
-     * buidlingID1, buildingID2
+     * buildingID1, buildingID2
      *
      * @param buildingID1 start of the range of buildings
      * @param buildingID2 stop of the range of buildings
      * @return ArrayList list of the buildings within the range
      */
-    public ArrayList<Integer> getBuildingDetails(int buildingID1, int buildingID2) {
+    ArrayList<Integer> getBuildingDetails(int buildingID1, int buildingID2) {
         ArrayList<Integer> resultList = new ArrayList<Integer>();
         getAllBuildings(root, buildingID1, buildingID2, resultList);
         return resultList;
@@ -51,7 +44,7 @@ public class RB_tree {
      * @param buildingID unique identifier of the building
      * @return int the building details
      */
-    public int getBuildingDetails(int buildingID) {
+    int getBuildingDetails(int buildingID) {
         ArrayList<Integer> res = new ArrayList<Integer>();
         findJobs2(root, buildingID, res);
         //isBalanced(null);
@@ -71,7 +64,7 @@ public class RB_tree {
      * @param end   end of the range
      * @param res   Given list of buildings
      */
-    private void getAllBuildings(RB_Node root, int start, int end, ArrayList<Integer> res) {
+    private void getAllBuildings(Red_Black_Node root, int start, int end, ArrayList<Integer> res) {
         if (root == null) {
             return;
         }
@@ -93,7 +86,7 @@ public class RB_tree {
      * @param buildingID Identifier of building
      * @param resultList List of results
      */
-    private void findJobs2(RB_Node root, int buildingID, ArrayList<Integer> resultList) {
+    private void findJobs2(Red_Black_Node root, int buildingID, ArrayList<Integer> resultList) {
         if (root == null) {
             return;
         }
@@ -115,8 +108,8 @@ public class RB_tree {
      * @param root root
      * @return minimum value RB node
      */
-    public RB_Node getTheMinimumValue(RB_Node root) {
-        RB_Node minimum = root;
+    private Red_Black_Node getTheMinimumValue(Red_Black_Node root) {
+        Red_Black_Node minimum = root;
         while (!minimum.left.isEmpty()) {
             minimum = minimum.left;
         }
@@ -130,8 +123,8 @@ public class RB_tree {
      * @param root root
      * @return Maximum value red black tree node
      */
-    public RB_Node getMaximumValue(RB_Node root) {
-        RB_Node maximum = root;
+    private Red_Black_Node getMaximumValue(Red_Black_Node root) {
+        Red_Black_Node maximum = root;
         while (!maximum.right.isEmpty()) {
             maximum = maximum.right;
         }
@@ -139,10 +132,10 @@ public class RB_tree {
     }
 
     public int nextBuilding_to_Construct(int buildingID) {
-        RB_Node current = Search(buildingID, root);
+        Red_Black_Node current = Search(buildingID, root);
         if (current.isEmpty()) {
-            RB_Node tempro = this.root;
-            RB_Node endNode = tempro;
+            Red_Black_Node tempro = this.root;
+            Red_Black_Node endNode = tempro;
             while (!tempro.isEmpty()) {
                 endNode = tempro;
                 if (buildingID > tempro.buildingID) {
@@ -154,7 +147,7 @@ public class RB_tree {
             if (endNode.buildingID > buildingID) {
                 return endNode.buildingID;
             } else {
-                RB_Node rbNode_parent = endNode.parent;
+                Red_Black_Node rbNode_parent = endNode.parent;
                 while (!rbNode_parent.isEmpty() && rbNode_parent.right == endNode) {
                     endNode = rbNode_parent;
                     rbNode_parent = rbNode_parent.parent;
@@ -163,10 +156,10 @@ public class RB_tree {
             }
         } else {
             if (!current.right.isEmpty()) {
-                RB_Node min_node = getTheMinimumValue(current.right);
+                Red_Black_Node min_node = getTheMinimumValue(current.right);
                 return min_node.buildingID;
             } else {
-                RB_Node parent = current.parent;
+                Red_Black_Node parent = current.parent;
                 while (!parent.isEmpty() && parent.right == current) {
                     current = parent;
                     parent = parent.parent;
@@ -184,7 +177,7 @@ public class RB_tree {
      * @param root root
      * @return Red_Black_Node or else root
      */
-    public RB_Node Search(int buildingID, RB_Node root) {
+    public Red_Black_Node Search(int buildingID, Red_Black_Node root) {
         while(!root.isEmpty()){
                 if (root.buildingID == buildingID) {
                     return root;
@@ -205,7 +198,7 @@ public class RB_tree {
      * @param root       root
      * @return int 0 0r 1 based on search
      */
-    public int checkIfBuildingPresent(int buildingID, RB_Node root) {
+    public int checkIfBuildingPresent(int buildingID, Red_Black_Node root) {
         while (!root.isEmpty()) {
             if (root.buildingID == buildingID) {
                 return 1;
@@ -226,10 +219,10 @@ public class RB_tree {
      * @return the previous building
      */
     public int getPreviousBuilding(int buildingID) {
-        RB_Node curentNode = Search(buildingID, root);
+        Red_Black_Node curentNode = Search(buildingID, root);
         if (curentNode.isEmpty()) {
-            RB_Node tempro = this.root;
-            RB_Node lastRBNode = new Empty();
+            Red_Black_Node tempro = this.root;
+            Red_Black_Node lastRBNode = new EmptyRedBlackTree();
             while (!tempro.isEmpty()) {
                 lastRBNode = tempro;
                 if (buildingID > tempro.buildingID) {
@@ -242,8 +235,8 @@ public class RB_tree {
             if (lastRBNode.buildingID < buildingID) {
                 return lastRBNode.buildingID;
             } else {
-                RB_Node parentRBNode = lastRBNode;
-                RB_Node childRBNode = tempro;
+                Red_Black_Node parentRBNode = lastRBNode;
+                Red_Black_Node childRBNode = tempro;
                 while (!parentRBNode.isEmpty() && parentRBNode.left == childRBNode) {
                     childRBNode = parentRBNode;
                     parentRBNode = parentRBNode.parent;
@@ -253,10 +246,10 @@ public class RB_tree {
 
         } else {
             if (!curentNode.left.isEmpty()) {
-                RB_Node maximumNode = getMaximumValue(curentNode.left);
+                Red_Black_Node maximumNode = getMaximumValue(curentNode.left);
                 return maximumNode.buildingID;
             } else {
-                RB_Node parentNode = curentNode.parent;
+                Red_Black_Node parentNode = curentNode.parent;
                 while (!parentNode.isEmpty() && parentNode.left == curentNode) {
                     curentNode = parentNode;
                     parentNode = parentNode.parent;
@@ -274,9 +267,9 @@ public class RB_tree {
      * @param executedTime       time the building has to be constructed
      * @return Red black tree node
      */
-    public RB_Node insert(int buildingID, long totalExecutionTime, long executedTime) {
-        RB_Node tempro = this.root;
-        RB_Node lastNode = tempro;
+    public Red_Black_Node insert(int buildingID, long totalExecutionTime, long executedTime) {
+        Red_Black_Node tempro = this.root;
+        Red_Black_Node lastNode = tempro;
         while (!tempro.isEmpty()) {
             lastNode = tempro;
             if (buildingID > tempro.buildingID) {
@@ -285,8 +278,8 @@ public class RB_tree {
                 tempro = tempro.left;
             }
         }
-        Empty Empty = new Empty();
-        RB_Node z = new RB_Node(buildingID, 0, Empty, Empty, Empty, Color.red,
+        EmptyRedBlackTree Empty = new EmptyRedBlackTree();
+        Red_Black_Node z = new Red_Black_Node(buildingID, 0, Empty, Empty, Empty, Node_Color.red,
                 totalExecutionTime, executedTime);
         z.parent = lastNode;
         if (lastNode.isEmpty()) {
@@ -309,7 +302,7 @@ public class RB_tree {
         }
     }
 
-    static boolean isBalancedUtil(RB_Node root,
+    static boolean isBalancedUtil(Red_Black_Node root,
                                   INT maxh, INT minh)
     {
 
@@ -349,7 +342,7 @@ public class RB_tree {
     }
 
     // A wrapper over isBalancedUtil()
-    static boolean isBalanced(RB_Node root)
+    static boolean isBalanced(Red_Black_Node root)
     {
         INT maxh=new INT(), minh=new INT();
         return isBalancedUtil(root, maxh, minh);
@@ -359,8 +352,8 @@ public class RB_tree {
      *
      * @param around The node around which we have to left rotate
      */
-    public void rotate_left(RB_Node around){
-        RB_Node y = around.right;
+    public void rotate_left(Red_Black_Node around){
+        Red_Black_Node y = around.right;
         around.right = y.left;
         if(!y.left.isEmpty()){
             y.left.parent = around;
@@ -387,8 +380,8 @@ public class RB_tree {
      *
      * @param around The node around which we have to left rotate
      */
-    public void rotate_right(RB_Node around){
-        RB_Node x = around.left;
+    public void rotate_right(Red_Black_Node around){
+        Red_Black_Node x = around.left;
         around.left = x.right;
         if(!x.right.isEmpty()){
             x.right.parent = around;
@@ -413,32 +406,32 @@ public class RB_tree {
      * Swap function for swapping
      * two red black tree nodes
      *
-     * @param one
-     * @param two
+     * @param oneNode the first node to swap
+     * @param twoNode the second node to swap
      */
-    public void replace_RB(RB_Node u, RB_Node v){
-        if(u.parent.isEmpty()){
-            this.root = v;
+    public void replace_RB(Red_Black_Node oneNode, Red_Black_Node twoNode){
+        if(oneNode.parent.isEmpty()){
+            this.root = twoNode;
         }
-        else if(u == u.parent.left){
-            u.parent.left = v;
+        else if(oneNode == oneNode.parent.left){
+            oneNode.parent.left = twoNode;
         }
         else{
-            u.parent.right = v;
+            oneNode.parent.right = twoNode;
         }
-        v.parent = u.parent;
+        twoNode.parent = oneNode.parent;
     }
 
     /**
      * Contains all the cases of a delete of a red black tree
      *
-     * @param delete Node to be deleted
+     * @param z Node to be deleted
      */
-    public void delete(RB_Node z){
-        RB_Node y = z;
-        RB_Node copy_y = y;
-        RB_Node x;
-        copy_y.color = y.color;
+    public void delete(Red_Black_Node z){
+        Red_Black_Node y = z;
+        Red_Black_Node copy_y = y;
+        Red_Black_Node x;
+        copy_y.nodeColor = y.nodeColor;
         if(z.left.isEmpty()){
             x = z.right;
             replace_RB(z,z.right);
@@ -450,16 +443,16 @@ public class RB_tree {
         else{
             y = getTheMinimumValue(z.right);
             x = y.right;
-            copy_y.color = y.color;
+            copy_y.nodeColor = y.nodeColor;
             replace_RB(y,y.right);
             replace_RB(z,y);
             y.left = z.left;
             y.left.parent = y;
             y.right = z.right;
             y.right.parent = y;
-            y.color = z.color;
+            y.nodeColor = z.nodeColor;
         }
-        if(copy_y.color == Color.black){
+        if(copy_y.nodeColor == Node_Color.black){
             rearrange(x);
         }
     }
@@ -469,74 +462,75 @@ public class RB_tree {
      * we have to restructure the tree to satisfy
      * the red black tree conditions
      *
-     * @param around Node around which the restructure has to be done
+     * @param reArrangeNode Node around which the restructure has to be done
      */
-    public void rearrange(RB_Node x){
-        while(x != this.root && x.color == Color.black){
+    public void rearrange(Red_Black_Node reArrangeNode){
+        while(reArrangeNode != this.root && reArrangeNode.nodeColor == Node_Color.black){
             //x is left child
-            if(x == x.parent.left){
-                RB_Node w = x.parent.right;
+            if(reArrangeNode == reArrangeNode.parent.left){
+                Red_Black_Node rightOfRearrange = reArrangeNode.parent.right;
                 //when sibling of x is red
-                if(w.color == Color.red){
-                    w.color = Color.black;
-                    x.parent.color = Color.red;
-                    rotate_left(x.parent);
-                    w = x.parent.right;
+                if(rightOfRearrange.nodeColor == Node_Color.red){
+                    rightOfRearrange.nodeColor = Node_Color.black;
+                    reArrangeNode.parent.nodeColor = Node_Color.red;
+                    rotate_left(reArrangeNode.parent);
+                    rightOfRearrange = reArrangeNode.parent.right;
                 }
-                if(w.left.color == Color.black  &&  w.right.color == Color.black){
+                if(rightOfRearrange.left.nodeColor == Node_Color.black  &&
+                        rightOfRearrange.right.nodeColor == Node_Color.black){
                     //when sibling of x is black, and both children of sibling are black
-                    w.color = Color.red;
-                    x = x.parent;
+                    rightOfRearrange.nodeColor = Node_Color.red;
+                    reArrangeNode = reArrangeNode.parent;
                 }
                 else{
                     //sibling of x is black and left child of sibling  is red and right child is black
-                    if(w.right.color == Color.black){
+                    if(rightOfRearrange.right.nodeColor == Node_Color.black){
 
-                        w.left.color = Color.black;
-                        w.color = Color.red;
-                        rotate_right(w);
-                        w = x.parent.right;
+                        rightOfRearrange.left.nodeColor = Node_Color.black;
+                        rightOfRearrange.nodeColor = Node_Color.red;
+                        rotate_right(rightOfRearrange);
+                        rightOfRearrange = reArrangeNode.parent.right;
                     }
                     //sibling of x is black and right child is black
-                    w.color = x.parent.color;
-                    x.parent.color = Color.black;
-                    w.right.color = Color.black;
-                    rotate_left(x.parent);
-                    x = this.root;
+                    rightOfRearrange.nodeColor = reArrangeNode.parent.nodeColor;
+                    reArrangeNode.parent.nodeColor = Node_Color.black;
+                    rightOfRearrange.right.nodeColor = Node_Color.black;
+                    rotate_left(reArrangeNode.parent);
+                    reArrangeNode = this.root;
 
                 }
             }
             //x is the right child
-            else if(x == x.parent.right){
-                RB_Node w = x.parent.left;
-                if(w.color == Color.red){
-                    w.color = Color.black;
-                    x.parent.color = Color.red;
-                    rotate_right(x.parent);
-                    w = x.parent.left;
+            else if(reArrangeNode == reArrangeNode.parent.right){
+                Red_Black_Node w = reArrangeNode.parent.left;
+                if(w.nodeColor == Node_Color.red){
+                    w.nodeColor = Node_Color.black;
+                    reArrangeNode.parent.nodeColor = Node_Color.red;
+                    rotate_right(reArrangeNode.parent);
+                    w = reArrangeNode.parent.left;
                 }
-                if(w.left.color == Color.black  &&  w.right.color == Color.black){
-                    w.color = Color.red;
-                    x = x.parent;
+                if(w.left.nodeColor == Node_Color.black  &&  w.right.nodeColor == Node_Color.black){
+                    w.nodeColor = Node_Color.red;
+                    reArrangeNode = reArrangeNode.parent;
                 }
                 else{
-                    if(w.left.color == Color.black){
-                        w.right.color = Color.black;
-                        w.color = Color.red;
+                    if(w.left.nodeColor == Node_Color.black){
+                        w.right.nodeColor = Node_Color.black;
+                        w.nodeColor = Node_Color.red;
                         rotate_left(w);
-                        w = x.parent.left;
+                        w = reArrangeNode.parent.left;
                     }
-                    w.color = x.parent.color;
-                    x.parent.color = Color.black;
-                    w.left.color = Color.black;
-                    rotate_right(x.parent);
-                    x = this.root;
+                    w.nodeColor = reArrangeNode.parent.nodeColor;
+                    reArrangeNode.parent.nodeColor = Node_Color.black;
+                    w.left.nodeColor = Node_Color.black;
+                    rotate_right(reArrangeNode.parent);
+                    reArrangeNode = this.root;
                 }
 
             }
 
         }
-        x.color = Color.black;
+        reArrangeNode.nodeColor = Node_Color.black;
     }
 }
 
